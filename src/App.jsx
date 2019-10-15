@@ -7,6 +7,7 @@ import SiteHeader from './components/site/SiteHeader';
 import StyleGuide from './StyleGuide';
 import Questions from './Questions';
 import Example from './Example';
+import Big from './Big';
 import NoMatch from './components/site/NoMatch';
 
 @reactn
@@ -27,6 +28,7 @@ class App extends Component {
               />
               <Route exact path="/styles" component={StyleGuide} />
               <Route exact path="/questions" component={Questions} />
+              <Route exact path="/big" component={Big} />
               <Route component={NoMatch} />
             </Switch>
           </main>
