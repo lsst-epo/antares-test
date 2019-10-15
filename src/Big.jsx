@@ -1,6 +1,7 @@
 import React from 'react';
 import CircularProgress from 'react-md/lib//Progress/CircularProgress';
 import API from './components/site/API';
+import { AntaresClient } from './lib/utilities';
 
 class Big extends React.PureComponent {
   constructor(props) {
@@ -10,21 +11,24 @@ class Big extends React.PureComponent {
       galaxies: {},
       loading: true,
     };
+
+    this.antares = new AntaresClient();
   }
 
   constructConeSearch() {
     return 'https://antares.noao.edu/api/alerts/cone_search/?';
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     const ra = 58.044708;
     const dec = -8.506381;
     const radius = 1 / 3200;
 
-    axios.get(
-      `https://antares.noao.edu/api/alerts/cone_search/?ra=${ra}&dec=${dec}&radius=${radius}`
-    );
-    // 'https://antares.noao.edu/api/alerts/cone_search/?ra={ra}&dec={dec}&radius{radius}&limit=10&offset=0'
+    const data = await this.antares
+      .getLightCurves(ra, dec, radius)
+      .catch(err => {
+        alert('error pulling data');
+      });
 
     // API.get('static-data/SDSS_SpecGals_DR8.json').then(res => {
     //   this.setState(prevState => ({
@@ -36,7 +40,7 @@ class Big extends React.PureComponent {
   }
 
   render() {
-    const { galaxies, loading } = this.state;
+    const { loading } = this.state;
 
     return (
       <div>
