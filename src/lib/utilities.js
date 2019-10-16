@@ -9,16 +9,14 @@ export const AntaresClient = function async() {
 
   Api.getLocusId = async function(ra, dec, radius) {
     const locusIds = await axios.get(
-      `https://antares.noao.edu/api/alerts/cone_search/?ra=${ra}&dec=${dec}&radius=${radius}`,
-      { headers: {'Access-Control-Allow-Origin': '*'} }
+      `https://antares.noao.edu/api/alerts/cone_search/?ra=${ra}&dec=${dec}&radius=${radius}`
     );
     return locusIds.result[0];
   };
 
   Api.getLightCurve = async function(locusId) {
     const lightCurve = await axios.get(
-      `https://antares.noao.edu/alerts/lightcurve-data/?locus_id=${locusId}`,
-      { headers: {'Access-Control-Allow-Origin': '*'} }
+      `https://antares.noao.edu/alerts/lightcurve-data/?locus_id=${locusId}`
     );
     return lightCurve;
   };
