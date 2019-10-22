@@ -1,6 +1,6 @@
 import React from 'react';
-import CircularProgress from 'react-md/lib//Progress/CircularProgress';
-// import API from './components/site/API';
+// import CircularProgress from 'react-md/lib//Progress/CircularProgress';
+import ScatterPlot from './components/scatter-plot';
 import { AntaresClient } from './lib/utilities';
 
 class Big extends React.PureComponent {
@@ -15,66 +15,86 @@ class Big extends React.PureComponent {
     this.antares = new AntaresClient();
   }
 
-  // constructConeSearch() {
-  //   return 'https://antares.noao.edu/api/alerts/cone_search/?';
-  // }
-
   async componentDidMount() {
     const ra = 58.044708;
     const dec = -8.506381;
     const radius = 1 / 3200;
 
-    const data = await this.antares
+    this.antares
       .getLightCurves(ra, dec, radius)
+      .then(res => {
+        this.setState(prevState => ({
+          ...prevState,
+          loading: false,
+          data: res,
+        }));
+      })
       .catch(err => {
-        // console.log(err);
         console.log('error pulling data', err);
       });
-    this.setState(prevState => ({
-      ...prevState,
-      loading: false,
-      data,
-    }));
+  }
+
+  formatData(data) {
+    return data.map(datum => {
+      return { data: datum.datapoints };
+    });
+  }
+
+  renderStarData(data) {
+    return (
+      <li>
+        <div>Alert: {data.alert_id}</div>
+        <ul>
+          <li>X: {data.x}</li>
+          <li>Y: {data.y}</li>
+        </ul>
+      </li>
+    );
+  }
+
+  renderStar(star) {
+    return (
+      <li key={star.name}>
+        <h4>{star.name}</h4>
+        <div>Alerts</div>
+        <ul>
+          {star.datapoints.map(data => {
+            return this.renderStarData(data);
+          })}
+        </ul>
+      </li>
+    );
+  }
+
+  renderStars(data) {
+    return (
+      <ul>
+        {data.map(star => {
+          return this.renderStar(star);
+        })}
+      </ul>
+    );
   }
 
   render() {
     const { loading, data } = this.state;
-
     return (
-      <div>
-        <h1>Giant data set</h1>
-        {loading && (
-          <CircularProgress
-            scale={4}
-            value={loading}
-            className="chart-loader"
+      <>
+        {!loading && (
+          <ScatterPlot
+            data={this.formatData(data)}
+            xDomain={[58710, 58780]}
+            yDomain={[21, 17.5]}
+            xValueAccessor="x"
+            yValueAccessor="y"
+            xAxisLabel="Time"
+            yAxisLabel="Magnitude"
+            preSelected
+            multiple
           />
         )}
-        {!loading && (
-          <>
-            <span>stuff</span>
-            <ul>
-              {data.map((galaxy, i) => {
-                /* eslint-disable */
-                return <div key={galaxy.name + '-' + i}>stuff</div>;
-                /* eslint-enable */
-                // eslint-enable
-                // return (
-                //   <li key={`${galaxy.RA}-${galaxy.redshift}`}>
-                //     <h3>Galaxy: {i + 1}</h3>
-                //     <ul>
-                //       <li>RA: {galaxy.RA}</li>
-                //       <li>Dec: {galaxy.Dec}</li>
-                //       <li>Redshift: {galaxy.redshift}</li>
-                //       <li>Mass: {galaxy.stellar_mass}</li>
-                //     </ul>
-                //   </li>
-                // );
-              })}
-            </ul>
-          </>
-        )}
-      </div>
+        {!loading && this.renderStars(data)}
+      </>
     );
   }
 }
