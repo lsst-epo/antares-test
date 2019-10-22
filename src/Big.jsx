@@ -1,6 +1,6 @@
 import React from 'react';
 import CircularProgress from 'react-md/lib//Progress/CircularProgress';
-import API from './components/site/API';
+// import API from './components/site/API';
 import { AntaresClient } from './lib/utilities';
 
 class Big extends React.PureComponent {
@@ -8,16 +8,16 @@ class Big extends React.PureComponent {
     super(props);
 
     this.state = {
-      galaxies: {},
+      data: {},
       loading: true,
     };
 
     this.antares = new AntaresClient();
   }
 
-  constructConeSearch() {
-    return 'https://antares.noao.edu/api/alerts/cone_search/?';
-  }
+  // constructConeSearch() {
+  //   return 'https://antares.noao.edu/api/alerts/cone_search/?';
+  // }
 
   async componentDidMount() {
     const ra = 58.044708;
@@ -27,20 +27,18 @@ class Big extends React.PureComponent {
     const data = await this.antares
       .getLightCurves(ra, dec, radius)
       .catch(err => {
-        alert('error pulling data');
+        // console.log(err);
+        console.log('error pulling data', err);
       });
-
-    // API.get('static-data/SDSS_SpecGals_DR8.json').then(res => {
-    //   this.setState(prevState => ({
-    //     ...prevState,
-    //     galaxies: res.data.galaxies,
-    //     loading: false,
-    //   }));
-    // });
+    this.setState(prevState => ({
+      ...prevState,
+      loading: false,
+      data,
+    }));
   }
 
   render() {
-    const { loading } = this.state;
+    const { loading, data } = this.state;
 
     return (
       <div>
@@ -53,22 +51,28 @@ class Big extends React.PureComponent {
           />
         )}
         {!loading && (
-          <span>stuff</span>
-          // <ul>
-          //   {galaxies.map((galaxy, i) => {
-          //     return (
-          //       <li key={`${galaxy.RA}-${galaxy.redshift}`}>
-          //         <h3>Galaxy: {i + 1}</h3>
-          //         <ul>
-          //           <li>RA: {galaxy.RA}</li>
-          //           <li>Dec: {galaxy.Dec}</li>
-          //           <li>Redshift: {galaxy.redshift}</li>
-          //           <li>Mass: {galaxy.stellar_mass}</li>
-          //         </ul>
-          //       </li>
-          //     );
-          //   })}
-          // </ul>
+          <>
+            <span>stuff</span>
+            <ul>
+              {data.map((galaxy, i) => {
+                /* eslint-disable */
+                return <div key={galaxy.name + '-' + i}>stuff</div>;
+                /* eslint-enable */
+                // eslint-enable
+                // return (
+                //   <li key={`${galaxy.RA}-${galaxy.redshift}`}>
+                //     <h3>Galaxy: {i + 1}</h3>
+                //     <ul>
+                //       <li>RA: {galaxy.RA}</li>
+                //       <li>Dec: {galaxy.Dec}</li>
+                //       <li>Redshift: {galaxy.redshift}</li>
+                //       <li>Mass: {galaxy.stellar_mass}</li>
+                //     </ul>
+                //   </li>
+                // );
+              })}
+            </ul>
+          </>
         )}
       </div>
     );
