@@ -6,3 +6,11 @@
     outline: none;
   }
 }
+
+@for $i from 1 through 10 {
+  .dataset-alert-#{$i} {
+    color: #ffffff;
+    background-color: nth($chartColors , $i );
+    fill: nth($chartColors , $i );
+  }
+}
