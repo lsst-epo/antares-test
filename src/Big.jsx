@@ -2,6 +2,7 @@ import React from 'react';
 // import CircularProgress from 'react-md/lib//Progress/CircularProgress';
 import ScatterPlot from './components/scatter-plot';
 import { AntaresClient } from './lib/utilities';
+import StarsList from './components/starlist/StarsList';
 
 class Big extends React.PureComponent {
   constructor(props) {
@@ -30,6 +31,7 @@ class Big extends React.PureComponent {
         }));
       })
       .catch(err => {
+        // eslint-disable-next-line no-console
         console.log('error pulling data', err);
       });
   }
@@ -38,42 +40,6 @@ class Big extends React.PureComponent {
     return data.map(datum => {
       return { data: datum.datapoints };
     });
-  }
-
-  renderStarData(data) {
-    return (
-      <li>
-        <div>Alert: {data.alert_id}</div>
-        <ul>
-          <li>X: {data.x}</li>
-          <li>Y: {data.y}</li>
-        </ul>
-      </li>
-    );
-  }
-
-  renderStar(star) {
-    return (
-      <li key={star.name}>
-        <h4>{star.name}</h4>
-        <div>Alerts</div>
-        <ul>
-          {star.datapoints.map(data => {
-            return this.renderStarData(data);
-          })}
-        </ul>
-      </li>
-    );
-  }
-
-  renderStars(data) {
-    return (
-      <ul>
-        {data.map(star => {
-          return this.renderStar(star);
-        })}
-      </ul>
-    );
   }
 
   render() {
@@ -93,7 +59,7 @@ class Big extends React.PureComponent {
             multiple
           />
         )}
-        {!loading && this.renderStars(data)}
+        {!loading && <StarsList stars={data} />}
       </>
     );
   }

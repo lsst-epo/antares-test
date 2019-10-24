@@ -169,3 +169,12 @@ export const AntaresClient = function async() {
 
   return Api;
 };
+
+export const getRandomID = function(string) {
+  let ans = '';
+  // eslint-disable-next-line no-plusplus
+  for (let i = 0; i < 20; i++) {
+    ans += string[Math.floor(Math.random() * string.length)];
+  }
+  return ans;
+};
