@@ -45,14 +45,25 @@ class Big extends React.PureComponent {
     });
   }
 
+  buildLegend(data) {
+    return data.map((datum, index) => {
+      return (
+        <div key={datum.name} className="container-flex centered spaced">
+          <div className="set-name">{datum.name}</div>
+          <div className={`data-point dataset-alert-${index + 1}`} />
+        </div>
+      );
+    });
+  }
+
   render() {
     const { loading, data } = this.state;
     return (
-      <div className="container-flex">
-        <div className="col-width-50">
+      <div className="container-flex container-page">
+        <div className="col-width-50 scrollable">
           {!loading && <StarsList stars={data} />}
         </div>
-        <div className="col-width-50 padded">
+        <div className="col-width-50 padded col-fixed">
           {!loading && (
             <ScatterPlot
               data={this.formatData(data)}
@@ -62,7 +73,7 @@ class Big extends React.PureComponent {
               yValueAccessor="y"
               xAxisLabel="Time"
               yAxisLabel="Magnitude"
-              showColorLegend
+              legend={this.buildLegend(data)}
               preSelected
               multiple
             />
