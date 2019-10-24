@@ -37,30 +37,38 @@ class Big extends React.PureComponent {
   }
 
   formatData(data) {
-    return data.map(datum => {
-      return { data: datum.datapoints };
+    return data.map((datum, index) => {
+      return {
+        data: datum.datapoints,
+        className: `dataset-alert-${index + 1}`,
+      };
     });
   }
 
   render() {
     const { loading, data } = this.state;
     return (
-      <>
-        {!loading && (
-          <ScatterPlot
-            data={this.formatData(data)}
-            xDomain={[58710, 58780]}
-            yDomain={[21, 17.5]}
-            xValueAccessor="x"
-            yValueAccessor="y"
-            xAxisLabel="Time"
-            yAxisLabel="Magnitude"
-            preSelected
-            multiple
-          />
-        )}
-        {!loading && <StarsList stars={data} />}
-      </>
+      <div className="container-flex">
+        <div className="col-width-50">
+          {!loading && <StarsList stars={data} />}
+        </div>
+        <div className="col-width-50 padded">
+          {!loading && (
+            <ScatterPlot
+              data={this.formatData(data)}
+              xDomain={[58710, 58780]}
+              yDomain={[21, 17.5]}
+              xValueAccessor="x"
+              yValueAccessor="y"
+              xAxisLabel="Time"
+              yAxisLabel="Magnitude"
+              showColorLegend
+              preSelected
+              multiple
+            />
+          )}
+        </div>
+      </div>
     );
   }
 }

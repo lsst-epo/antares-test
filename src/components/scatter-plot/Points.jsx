@@ -18,8 +18,13 @@ class Points extends React.PureComponent {
       // includeSun,
     } = this.props;
     // console.log(data);
+
+    const groupClasses = classnames('data-points', {
+      [pointClasses]: pointClasses,
+    });
+
     return (
-      <g className="data-points">
+      <g className={groupClasses}>
         {data.map((d, i) => {
           const { source_id: id } = d;
           const key = `point-${id}-${i}`;
