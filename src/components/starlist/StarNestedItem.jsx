@@ -1,12 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import '../../assets/components/starList/star-nested-item.scss';
 
 class StarNestedList extends React.PureComponent {
   render() {
     // eslint-disable-next-line react/destructuring-assignment
     const { alert_id: alertId, x, y } = this.props.starData;
     return (
-      <li>
+      <li className="star-nested-item">
         <div>Alert: {alertId}</div>
         <ul>
           <li>X: {x}</li>
