@@ -1,15 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import StarList from './Star';
+import StarItem from './StarItem';
 import { getRandomID } from '../../lib/utilities';
+import '../../assets/components/starList/stars-list.scss';
 
 class StarsList extends React.PureComponent {
   render() {
     const { stars } = this.props;
     return (
-      <ul>
+      <ul className="stars-list">
         {stars.map(star => (
-          <StarList key={`${getRandomID(star.name)}_id`} star={star} />
+          <StarItem key={`${getRandomID(star.name)}_id`} star={star} />
         ))}
       </ul>
     );
