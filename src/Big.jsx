@@ -50,7 +50,9 @@ class Big extends React.PureComponent {
       return (
         <div key={datum.name} className="container-flex centered spaced">
           <div className="set-name">{datum.name}</div>
-          <div className={`data-point dataset-alert-${index + 1}`} />
+          <div
+            className={`data-point dataset-alert-${index + 1} background-color`}
+          />
         </div>
       );
     });

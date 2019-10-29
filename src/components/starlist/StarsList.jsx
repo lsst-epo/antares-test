@@ -9,8 +9,12 @@ class StarsList extends React.PureComponent {
     const { stars } = this.props;
     return (
       <ul className="stars-list">
-        {stars.map(star => (
-          <StarItem key={`${getRandomID(star.name)}_id`} star={star} />
+        {stars.map((star, index) => (
+          <StarItem
+            key={`${getRandomID(star.name)}_id`}
+            star={star}
+            listIndex={index}
+          />
         ))}
       </ul>
     );
