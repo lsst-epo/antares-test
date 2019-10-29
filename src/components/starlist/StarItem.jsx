@@ -9,37 +9,55 @@ import '../../assets/components/starList/star-item.scss';
 
 class StarItem extends React.PureComponent {
   state = {
-    showItems: false,
+    isOpen: false,
   };
 
-  toggleItemsView = () => {
-    const { showItems } = this.state;
-    this.setState({ showItems: !showItems });
+  toggleItemsView = e => {
+    const { target } = e;
+    if (!target.classList.contains('open')) {
+      target.classList.add('open');
+      this.setState({ isOpen: true });
+    } else {
+      target.classList.remove('open');
+      this.setState({ isOpen: false });
+    }
   };
 
   getClassName = () => {
-    const { showItems } = this.state;
-    const openClassText = !showItems ? '' : 'open';
-    document
-      .querySelectorAll('.star-list-item--guts')
-      .forEach(elem => elem.classList.remove('open'));
-    return ['star-list-item--guts', openClassText].join(' ');
+    const { isOpen } = this.state;
+    const openClassText = !isOpen ? null : 'open';
+    if (!openClassText) this.setState({ isOpen: false });
+    return openClassText;
   };
 
   render() {
     // eslint-disable-next-line react/destructuring-assignment
-    const { name, datapoints } = this.props.star;
+    const { star, listIndex } = this.props;
 
     return (
-      <li key={name} className="star-list-item">
+      <li key={star.name} className={`star-list-item ${this.getClassName()}`}>
         <h4 className="title" onClick={this.toggleItemsView}>
-          {name}
+          <span
+            className={`data-point dataset-alert-${listIndex +
+              1} background-color`}
+          />
+          {star.name}
+          <div className="flex" />
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+          >
+            <path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z" />
+            <path fill="none" d="M0 0h24v24H0V0z" />
+          </svg>
         </h4>
-        <ul className={this.getClassName()}>
+        <ul className="star-list-item--guts">
           <div>Alerts</div>
-          {datapoints.map(data => (
+          {star.datapoints.map(data => (
             <StarNestedItem
-              key={`${getRandomID(name)}_star_id`}
+              key={`${getRandomID(star.name)}_star_id`}
               starData={data}
             />
           ))}
@@ -52,8 +70,7 @@ class StarItem extends React.PureComponent {
 // PropTypes
 StarItem.propTypes = {
   star: PropTypes.object.isRequired,
-  name: PropTypes.string.isRequired,
-  datapoints: PropTypes.object.isRequired,
+  listIndex: PropTypes.string.isRequired,
 };
 
 export default StarItem;
