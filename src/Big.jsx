@@ -3,14 +3,16 @@ import React from 'react';
 import ScatterPlot from './components/scatter-plot';
 import { AntaresClient } from './lib/utilities';
 import StarsList from './components/starlist/StarsList';
+import ToggleUpperLimit from './components/toggleUpperLimit';
 
 class Big extends React.PureComponent {
   constructor(props) {
     super(props);
 
     this.state = {
-      data: {},
+      data: null,
       loading: true,
+      upperLimit: false,
     };
 
     this.antares = new AntaresClient();
@@ -36,6 +38,28 @@ class Big extends React.PureComponent {
       });
   }
 
+  toggleUpperLimit = e => {
+    const isChecked = e.target.checked;
+    const { data } = this.state;
+    const newData = this.filterOutUpperLimit(data, isChecked);
+    this.setState(prevState => ({
+      ...prevState,
+      upperLimit: isChecked,
+      data: newData,
+    }));
+  };
+
+  filterOutUpperLimit(data, nofilter) {
+    const { upperLimit } = this.state;
+    const showUpperlimit = nofilter || upperLimit;
+    if (!showUpperlimit) {
+      return data.filter(dataset => {
+        return dataset.name.search(/Upper Limit/i) < 0;
+      });
+    }
+    return data;
+  }
+
   formatData(data) {
     return data.map((datum, index) => {
       return {
@@ -59,23 +83,30 @@ class Big extends React.PureComponent {
   }
 
   render() {
-    const { loading, data } = this.state;
+    const { upperLimit, loading, data } = this.state;
+    const renderData = !data ? {} : this.filterOutUpperLimit(data);
     return (
       <div className="container-flex container-page">
         <div className="col-width-50 scrollable">
-          {!loading && <StarsList stars={data} />}
+          {!loading && (
+            <ToggleUpperLimit
+              upperLimit={upperLimit}
+              toggleUpperLimit={this.toggleUpperLimit}
+            />
+          )}
+          {!loading && <StarsList stars={renderData} />}
         </div>
         <div className="col-width-50 padded col-fixed">
           {!loading && (
             <ScatterPlot
-              data={this.formatData(data)}
+              data={this.formatData(renderData)}
               xDomain={[58710, 58780]}
               yDomain={[21, 17.5]}
               xValueAccessor="x"
               yValueAccessor="y"
               xAxisLabel="Time"
               yAxisLabel="Magnitude"
-              legend={this.buildLegend(data)}
+              legend={this.buildLegend(renderData)}
               preSelected
               multiple
             />

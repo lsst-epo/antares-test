@@ -462,6 +462,7 @@ class ScatterPlot extends React.PureComponent {
             style={{ opacity: 0 }}
           >
             <defs>
+              x
               <clipPath id="clip">
                 <rect
                   x={padding}

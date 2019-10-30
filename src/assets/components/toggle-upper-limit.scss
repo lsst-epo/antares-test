@@ -1,0 +1,22 @@
+.input-container {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  padding: 10px;
+
+  &.checkbox {
+    margin-bottom: 10px;
+    cursor: pointer;
+
+    input[type='checkbox'] {
+      margin-right: 10px;
+      transform: zoom(1.2);
+    }
+
+    input[type='checkbox'], label {
+      cursor: pointer;
+    }
+  }
+}
